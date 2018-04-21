@@ -207,6 +207,14 @@ export default class CardStack extends Component {
     if((sindex-3) < 0 && !this.props.loop) return;
 
     const previusCardIndex = this.mod(sindex-3, cards.length)
+
+    try {
+      this.props.defaultValue(cards[previusCardIndex].props.children.props.data);
+    } catch (e) {
+      this.props.defaultValue('');
+      console.log('Unable to set default value: ', e);
+    }
+
     let update = {};
     if(topCard === 'cardA'){
       update = {
