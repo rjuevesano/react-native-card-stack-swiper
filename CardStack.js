@@ -75,6 +75,7 @@ export default class CardStack extends Component {
         {
 
           const swipeDirection = (gestureState.dy < 0) ? height * -1 : height;
+          console.log(swipeDirection, disableTopSwipe);
           if(swipeDirection < 0 && !disableTopSwipe)
           {
 
@@ -82,6 +83,7 @@ export default class CardStack extends Component {
           }
           else if (swipeDirection > 0 && !disableBottomSwipe)
           {
+              console.log("run");
             this._nextCard('bottom', gestureState.dx, swipeDirection, 200);
           }
           else
@@ -370,6 +372,8 @@ export default class CardStack extends Component {
         <View {...this._panResponder.panHandlers} style={[{position:'relative'},this.props.style]}>
           <Animated.View style={{
                 position: 'absolute',
+                top: 0,
+                marginTop: topCard === 'cardA' ? 25 : 20,
                 ...Platform.select({
                   ios: {
                     zIndex: (topCard === 'cardB') ? 3 : 2,
@@ -389,6 +393,8 @@ export default class CardStack extends Component {
           </Animated.View>
           <Animated.View style={{
                 position: 'absolute',
+                top: 0,
+                marginTop: topCard === 'cardB' ? 25 : 20,
                 ...Platform.select({
                   ios: {
                     zIndex: (topCard === 'cardA') ? 3 : 2,
