@@ -24,6 +24,7 @@ export default class CardStack extends Component {
 
   constructor(props) {
     super(props);
+
     this.state ={
       drag: new Animated.ValueXY({x: 0, y: 0}),
       dragDistance: new Animated.Value(0),
@@ -140,11 +141,18 @@ export default class CardStack extends Component {
         sindex: 2,
       });
     }
-
   }
 
   componentWillReceiveProps(nextProps){
     if (nextProps.children !== this.props.children) {
+
+      try {
+        this.props.defaultValue(nextProps.children[this.state.sindex-2].props.children.props.data.id);
+      } catch (e) {
+        this.props.defaultValue('');
+        console.log('Unable to set default value: ', e);
+      }
+
       this.setState({
         cards: nextProps.children,
         cardA: nextProps.children[(this.state.topCard=='cardA')? this.state.sindex-2 : this.state.sindex-1],
@@ -435,6 +443,7 @@ CardStack.propTypes = {
   onSwipedBottom: PropTypes.func,
   onSwiped: PropTypes.func,
   onSwipedAll: PropTypes.func,
+  defaultValue: PropTypes.func,
 
   disableBottomSwipe: PropTypes.bool,
   disableLeftSwipe: PropTypes.bool,
@@ -463,6 +472,7 @@ CardStack.defaultProps = {
   onSwipedAll: () => {
     console.log('onSwipedAll')
   },
+  defaultValue: () => {},
 
   disableBottomSwipe: false,
   disableLeftSwipe: false,
