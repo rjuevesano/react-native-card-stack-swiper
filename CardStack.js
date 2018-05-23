@@ -150,7 +150,6 @@ export default class CardStack extends Component {
         this.props.defaultValue(nextProps.children[this.state.sindex-2].props.children.props.data);
       } catch (e) {
         this.props.defaultValue('');
-        console.log('Unable to set default value: ', e);
       }
 
       this.setState({
