@@ -76,7 +76,6 @@ export default class CardStack extends Component {
         {
 
           const swipeDirection = (gestureState.dy < 0) ? height * -1 : height;
-          console.log(swipeDirection, disableTopSwipe);
           if(swipeDirection < 0 && !disableTopSwipe)
           {
 
@@ -84,7 +83,6 @@ export default class CardStack extends Component {
           }
           else if (swipeDirection > 0 && !disableBottomSwipe)
           {
-              console.log("run");
             this._nextCard('bottom', gestureState.dx, swipeDirection, 200);
           }
           else
@@ -211,7 +209,6 @@ export default class CardStack extends Component {
       this.props.defaultValue(cards[previusCardIndex].props.children.props.data);
     } catch (e) {
       this.props.defaultValue('');
-      console.log('Unable to set default value: ', e);
     }
 
     let update = {};
