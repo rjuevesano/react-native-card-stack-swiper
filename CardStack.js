@@ -406,8 +406,6 @@ export default class CardStack extends Component {
           </Animated.View>
           <Animated.View style={{
                 position: 'absolute',
-                top: 0,
-                marginTop: topCard === 'cardB' ? 25 : 20,
                 ...Platform.select({
                   ios: {
                     zIndex: (topCard === 'cardA') ? 3 : 2,
