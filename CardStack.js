@@ -24,7 +24,6 @@ export default class CardStack extends Component {
 
   constructor(props) {
     super(props);
-
     this.state ={
       drag: new Animated.ValueXY({x: 0, y: 0}),
       dragDistance: new Animated.Value(0),
@@ -34,6 +33,7 @@ export default class CardStack extends Component {
       topCard: 'cardA',
       cards: [],
       touchStart: 0,
+      slideGesture: false
     };
     this.distance = this.constructor.distance;
   }
@@ -53,6 +53,18 @@ export default class CardStack extends Component {
         const dragDistance = this.distance((horizontalSwipe) ? gestureState.dx : 0, (verticalSwipe) ? gestureState.dy : 0 );
         this.state.dragDistance.setValue(dragDistance);
         this.state.drag.setValue({x: (horizontalSwipe) ? gestureState.dx : 0, y: (verticalSwipe) ? gestureState.dy : 0});
+
+        // Catch tap events
+        const onTapCardDeadZone = 5;
+        if (
+          gestureState.dx < -onTapCardDeadZone ||
+          gestureState.dx > onTapCardDeadZone ||
+          gestureState.dy < -onTapCardDeadZone ||
+          gestureState.dy > onTapCardDeadZone
+        ) {
+          // must be directly set, because second card is zoom to 0.95
+          this.state.slideGesture = true;
+        }
       },
       onPanResponderTerminationRequest: (evt, gestureState) => true,
       onPanResponderRelease: (evt, gestureState) => {
@@ -112,6 +124,12 @@ export default class CardStack extends Component {
         {
           this._resetCard();
         }
+
+        if (!this.state.slideGesture && swipeDuration < 300) {
+          this.props.onTap((this.state.sindex - 2));
+        }
+        // must be directly set, because second card is zoom to 0.95
+        this.state.slideGesture = false;
       },
       onPanResponderTerminate: (evt, gestureState) => {
       },
@@ -139,6 +157,7 @@ export default class CardStack extends Component {
         sindex: 2,
       });
     }
+
   }
 
   componentWillReceiveProps(nextProps){
@@ -443,6 +462,7 @@ CardStack.propTypes = {
   onSwipedBottom: PropTypes.func,
   onSwiped: PropTypes.func,
   onSwipedAll: PropTypes.func,
+  onTap: PropTypes.func,
   defaultValue: PropTypes.func,
 
   disableBottomSwipe: PropTypes.bool,
@@ -472,6 +492,7 @@ CardStack.defaultProps = {
   onSwipedAll: () => {
     console.log('onSwipedAll')
   },
+  onTap: () => {},
   defaultValue: () => {},
 
   disableBottomSwipe: false,
@@ -482,7 +503,5 @@ CardStack.defaultProps = {
   verticalThreshold: height/4,
   horizontalSwipe: true,
   horizontalThreshold: width/2,
-  outputRotationRange: ['-15deg','0deg','15deg'],
-
-
+  outputRotationRange: ['-15deg','0deg','15deg']
 }
